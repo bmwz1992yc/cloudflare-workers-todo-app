@@ -1,5 +1,5 @@
 {
-  "name": "todo-app-worker",
+  "name": "cloudflare-workers-todo-app",
   "compatibility_date": "2025-10-02",
   "main": "index.js"
 }
