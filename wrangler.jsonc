@@ -1,0 +1,5 @@
+{
+  "name": "todo-app-worker",
+  "compatibility_date": "2025-10-02",
+  "main": "index.js"
+}

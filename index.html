@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全局待办事项清单</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="p-4 md:p-8">
+  <div class="container mx-auto max-w-4xl space-y-10">
+    
+    <h1 class="text-4xl font-bold text-center text-gray-900">全局待办事项清单</h1>
+
+    <!-- 添加事项的表单 -->
+    <div class="bg-white p-6 rounded-xl shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-800">添加新事项</h2>
+      <form action="/add_todo" method="POST">
+        <input type="hidden" name="creatorId" value="admin">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <input type="text" name="text" placeholder="输入新的待办事项..." required class="md:col-span-3 p-3 border rounded-lg">
+          
+          <div class="md:col-span-2 p-3 border rounded-lg bg-gray-50">
+            <h3 class="text-base font-semibold mb-2 text-gray-700">指派给 (可多选)</h3>
+            <div class="space-y-2 max-h-24 overflow-y-auto">
+                <label class="flex items-center space-x-2 font-normal">
+                    <input type="checkbox" name="userIds" value="public" class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                    <span>Public (无指定用户)</span>
+                </label>
+                <!-- 用户选项将在这里动态插入 -->
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg">添加</button>
+      </form>
+    </div>
+
+    <!-- 待办事项列表 -->
+    <div class="bg-white p-6 rounded-xl shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-800">所有事项</h2>
+      <ul id="all-todos-list" class="space-y-3">
+        <p class="text-center text-gray-500 py-10">无任何待办事项。</p>
+      </ul>
+    </div>
+
+    <!-- 用户管理区域 -->
+    <div class="bg-white p-6 rounded-xl shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-800">用户管理</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-2">新增用户</h3>
+          <form action="/add_user" method="POST" class="flex space-x-2">
+            <input type="text" name="username" placeholder="新用户名..." required class="flex-grow p-2 border rounded-lg">
+            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg">创建</button>
+          </form>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold mb-2">现有用户 (<span id="user-count">0</span>)</h3>
+          <ul id="user-list" class="space-y-2">
+            <li class="text-gray-500">暂无用户。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 最近删除 -->
+    <div class="bg-white p-6 rounded-xl shadow-lg">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-800">最近删除 (5天内)</h2>
+      <ul id="deleted-todos-list" class="space-y-3">
+        <p class="text-center text-gray-500 py-10">无已删除事项。</p>
+      </ul>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
