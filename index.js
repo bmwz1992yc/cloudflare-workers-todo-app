@@ -1,4 +1,10 @@
 // ⚠️ 重要提示：此 Worker 需要绑定一个名为 R2_BUCKET 的 R2 存储桶。
+// 如果未绑定 R2 存储桶，Worker 将无法正常工作。
+
+// 添加一个检查确保 R2_BUCKET 已定义
+if (typeof R2_BUCKET === 'undefined') {
+  console.error('R2_BUCKET is not defined. Please bind an R2 bucket to this Worker.');
+}
 
 const SHARE_LINKS_KEY = 'admin:share_links';
 const DELETED_TODOS_KEY = 'system:deleted_todos';
@@ -284,17 +290,18 @@ async function deleteUser(token) {
 // --- 主请求处理器 ---
 
 async function handleRequest(request) {
-  const url = new URL(request.url);
-  const verificationFilePath = '/6ee0f9bfa3e3dd568497b8062fba8521.txt';
-  const verificationContent = '12c799e1e1c52e9b3d20f6420f5e46a0589222ba';
-  // 1. 优先级最高：处理域名验证文件
-  // 必须检查完整的 url.pathname，而不是 pathSegment
-  if (url.pathname === verificationFilePath) {
-      return new Response(verificationContent, {
-          headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-          status: 200
-      });
-  }
+  try {
+    const url = new URL(request.url);
+    const verificationFilePath = '/6ee0f9bfa3e3dd568497b8062fba8521.txt';
+    const verificationContent = '12c799e1e1c52e9b3d20f6420f5e46a0589222ba';
+    // 1. 优先级最高：处理域名验证文件
+    // 必须检查完整的 url.pathname，而不是 pathSegment
+    if (url.pathname === verificationFilePath) {
+        return new Response(verificationContent, {
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+            status: 200
+        });
+    }
 
   const pathname = url.pathname;
   const pathSegment = pathname.substring(1).split('/')[0].toLowerCase();
@@ -375,6 +382,10 @@ async function handleRequest(request) {
   }
 
   return new Response('Method Not Allowed', { status: 405 });
+  } catch (error) {
+    console.error('Error in handleRequest:', error);
+    return new Response('Internal Server Error', { status: 500 });
+  }
 }
 
 // --- API 逻辑处理器 ---
