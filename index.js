@@ -285,6 +285,17 @@ async function deleteUser(token) {
 
 async function handleRequest(request) {
   const url = new URL(request.url);
+  const verificationFilePath = '/6ee0f9bfa3e3dd568497b8062fba8521.txt';
+  const verificationContent = '12c799e1e1c52e9b3d20f6420f5e46a0589222ba';
+  // 1. 优先级最高：处理域名验证文件
+  // 必须检查完整的 url.pathname，而不是 pathSegment
+  if (url.pathname === verificationFilePath) {
+      return new Response(verificationContent, {
+          headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+          status: 200
+      });
+  }
+
   const pathname = url.pathname;
   const pathSegment = pathname.substring(1).split('/')[0].toLowerCase();
   
